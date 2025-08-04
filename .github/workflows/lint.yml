@@ -23,6 +23,7 @@ jobs:
             exit 1
           fi
   biome-lint:
+    steps:
       - uses: actions/checkout@v4
       - name: Setup Node
         uses: actions/setup-node@v4
