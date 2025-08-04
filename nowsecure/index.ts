@@ -1,12 +1,12 @@
-import *  as tl from "azure-pipelines-task-lib/task";
-import { ToolRunner } from "azure-pipelines-task-lib/toolrunner";
-import { existsSync, readFileSync } from "fs";
-import { join } from "path";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import * as tl from "azure-pipelines-task-lib/task";
+import type { ToolRunner } from "azure-pipelines-task-lib/toolrunner";
 
-const enum Arch {
+enum Arch {
   X86 = "x86",
   X64 = "amd64",
-  ARM = "arm"
+  ARM = "arm",
 }
 
 function platformToString(platform: tl.Platform) {
@@ -22,45 +22,46 @@ function platformToString(platform: tl.Platform) {
 
 function chmodx(toolPath: string, platform: tl.Platform) {
   if (platform !== tl.Platform.Windows) {
-    tl.execSync("chmod", ["u+x", toolPath])
+    tl.execSync("chmod", ["u+x", toolPath]);
   } else {
-    tl.execSync("attrib", ["+x", toolPath])
+    tl.execSync("attrib", ["+x", toolPath]);
   }
 }
 
 function archFrom(envvar: string): Arch {
   switch (envvar) {
     case "X86":
-      return Arch.X86
+      return Arch.X86;
     case "X64":
-      return Arch.X64
+      return Arch.X64;
     case "ARM":
-      return Arch.ARM
-    default:
-      const emsg = `Unknown system architecture: ${envvar}`
-      throw new Error(emsg)
+      return Arch.ARM;
+    default: {
+      const emsg = `Unknown system architecture: ${envvar}`;
+      throw new Error(emsg);
+    }
   }
 }
 
 function toolName(arch: Arch, platform: tl.Platform): string {
   // Ex: ns_linux-amd64
-  return `ns_${platformToString(platform)}-${arch}${platform === tl.Platform.Windows ? '.exe' : ''}`
+  return `ns_${platformToString(platform)}-${arch}${platform === tl.Platform.Windows ? ".exe" : ""}`;
 }
 
 function getTool(): ToolRunner {
-  const platform = tl.getPlatform()
-  const arch = archFrom(tl.getVariable("Agent.OSArchitecture"))
+  const platform = tl.getPlatform();
+  const arch = archFrom(tl.getVariable("Agent.OSArchitecture"));
   const toolPath = join(__dirname, toolName(arch, platform));
 
   if (!existsSync(toolPath)) {
     const err =
-      "Unsupported runner type. Integration currently supports darwin/arm64, windows/amd64, and linux/amd64"
-    throw new Error(err)
+      "Unsupported runner type. Integration currently supports darwin/arm64, windows/amd64, and linux/amd64";
+    throw new Error(err);
   }
 
-  chmodx(toolPath, platform)
+  chmodx(toolPath, platform);
 
-  return tl.tool(toolPath)
+  return tl.tool(toolPath);
 }
 
 type Inputs = {
@@ -76,7 +77,7 @@ type Inputs = {
   analysisType?: string;
   minimum_score?: string;
   polling_duration_minutes?: string;
-}
+};
 
 function getInputs(): Inputs {
   const inputs = {
@@ -90,25 +91,27 @@ function getInputs(): Inputs {
     log_level: tl.getInput("log_level", false),
     analysisType: tl.getInput("analysis_type", false),
     minimum_score: tl.getInput("minimum_score", false),
-    polling_duration_minutes: tl.getInput("polling_duration_minutes", false)
-  }
+    polling_duration_minutes: tl.getInput("polling_duration_minutes", false),
+  };
 
-  if (inputs.analysisType === 'static') {
-    inputs.polling_duration_minutes = inputs.polling_duration_minutes || '30'
+  if (inputs.analysisType === "static") {
+    inputs.polling_duration_minutes = inputs.polling_duration_minutes || "30";
   } else {
-    inputs.polling_duration_minutes = inputs.polling_duration_minutes || '60'
+    inputs.polling_duration_minutes = inputs.polling_duration_minutes || "60";
   }
 
-  return inputs
+  return inputs;
 }
 
 async function run() {
-  const task = JSON.parse(readFileSync(join(__dirname, "task.json")).toString());
-  const version = `${task.version.Major}.${task.version.Minor}.${task.version.Patch}`
+  const task = JSON.parse(
+    readFileSync(join(__dirname, "task.json")).toString(),
+  );
+  const version = `${task.version.Major}.${task.version.Minor}.${task.version.Patch}`;
 
-  const inputs = getInputs()
+  const inputs = getInputs();
 
-  tl.mkdirP(inputs.artifact_dir)
+  tl.mkdirP(inputs.artifact_dir);
 
   const ns = getTool()
     .arg("run")
@@ -123,23 +126,23 @@ async function run() {
     .line(`--analysis-type ${inputs.analysisType}`)
     .line(`--minimum-score ${inputs.minimum_score}`)
     .line(`--poll-for-minutes ${inputs.polling_duration_minutes}`)
-    .line(`--ci-environment azure-${version}`)
+    .line(`--ci-environment azure-${version}`);
 
-  ns.on("stdout", function(data: Buffer) {
+  ns.on("stdout", (data: Buffer) => {
     console.log(data.toString());
   });
 
-  let exitCode: number
-  exitCode = await ns.execAsync()
+  let exitCode: number;
+  exitCode = await ns.execAsync();
 
-  if (exitCode != 0) {
-    const errorMessage = `NowSecure extension failed with exit code: ${exitCode}`
-    tl.setResult(tl.TaskResult.Failed, errorMessage, true)
+  if (exitCode !== 0) {
+    const errorMessage = `NowSecure extension failed with exit code: ${exitCode}`;
+    tl.setResult(tl.TaskResult.Failed, errorMessage, true);
   }
 }
 
 try {
-  run()
+  run();
 } catch (err) {
-  tl.setResult(tl.TaskResult.Failed, err.message, true)
+  tl.setResult(tl.TaskResult.Failed, err.message, true);
 }
