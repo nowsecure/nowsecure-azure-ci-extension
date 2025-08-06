@@ -35,6 +35,8 @@ jobs:
       - name: Biome Check
         run: npx @biomejs/biome@2 check nowsecure/index.ts
   markdown-lint:
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v4
       - name: markdownlint-cli
         uses: nosborn/github-action-markdown-cli@v3.5.0
@@ -45,6 +47,8 @@ jobs:
       - name: typos-action spellchecker
         uses: crate-ci/typos@v1.33.1
   yaml-lint:
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v4
       - name: yamllint
         uses: ibiqlik/action-yamllint@v3
