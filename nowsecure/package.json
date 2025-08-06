@@ -1,0 +1,22 @@
+{
+  "name": "nowsecure-azure-ci-extension",
+  "version": "0.0.1",
+  "description": "Node wrapper for nowsecure-ci binary",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --outDir dist",
+    "pre-package": "npm ci && npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^24.0.12",
+    "azure-pipelines-task-lib": "^5.2.1"
+  },
+  "devDependencies": {
+    "tfx-cli": "^0.21.1",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,72 @@
+{
+    "manifestVersion": 1,
+    "id": "nowsecure-azure-ci-extension-qa",
+    "name": "nowsecure-azure-ci-extension",
+    "description": "Azure Extension for NowSecure Security Assessment",
+    "version": "0.0.1",
+    "publisher": "qa-nowsecure",
+    "public": false,
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "tags": [
+        "mobile",
+        "dast",
+        "mast",
+        "security",
+        "nowsecure"
+    ],
+    "categories": [
+        "Azure Pipelines"
+    ],
+    "icons": {
+        "default": "images/extension-icon.png"
+    },
+    "files": [
+        {
+            "path": "nowsecure"
+        },
+        {
+            "path": "images",
+            "addressable": true
+        },
+        {
+            "path": "README.md",
+            "addressable": true
+        },
+        {
+            "path": "LICENSE",
+            "addressable": true
+        }
+    ],
+    "contributions": [
+        {
+            "id": "custom-build-release-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "buildandreleasetask"
+            }
+        }
+    ],
+    "content": {
+        "details": {
+            "path": "README.md"
+        },
+        "license": {
+            "path": "LICENSE"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/nowsecure/nowsecure-azure-ci-extension"
+    },
+    "branding": {
+        "color": "rgb(00, 153, 255)",
+        "theme": "dark"
+    }
+}
