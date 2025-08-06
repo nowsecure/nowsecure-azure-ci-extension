@@ -36,7 +36,7 @@
                 "static": "static"
             },
             "required": false,
-            "helpMarkDown": "Defines the type of assessment to run.  The 'full' runs both dynamic and static analyis tooling.  The 'static' option runs only static.",
+            "helpMarkDown": "Defines the type of assessment to run.  The 'full' runs both dynamic and static analysis tooling.  The 'static' option runs only static.",
             "groupName": "advanced"
         },
         {
