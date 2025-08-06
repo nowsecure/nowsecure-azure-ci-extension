@@ -1,33 +1,92 @@
-# nowsecure-azure-ci-extension
+## NowSecure Azure CI Extension 
+NowSecure provides purpose-built, fully automated mobile application security testing (static and dynamic) for your development pipeline. By testing your mobile application binary post-build from Gitlab, NowSecure ensure comprehensive coverage of newly developed code, third party components, and system dependencies. NowSecure quickly identifies and details real issues, provides remediation recommendations, and integrates with ticketing systems such as Gitlab and Jira. This integration requires a NowSecure platform license. See https://www.nowsecure.com for more information.
 
-## Development
+## Job Parameters
+To add this component to your CI/CD pipeline, the following should be done:
+- Get a token from your NowSecure platform instance.  More information on this can be found in the [NowSecure Support Portal](https://support.nowsecure.com/hc/en-us/articles/7499657262093-Creating-a-NowSecure-Platform-API-Bearer-Token)
+- Identify the ID of the group in NowSecure Platform that you want your assessment to be included in.  More information on this can be found in the [NowSecure Support Portal](https://support.nowsecure.com/hc/en-us/articles/6290991166605-Getting-Started-with-Groups#h_01G396F6CTEZ4P6G5Z1FDGJ12K). (Note: Authentication required to access this page)
+- Add a CI/CD variable to your project named, `NS_TOKEN` and add the token created above.  As this is a credential, be sure to set the variable as `Masked and Hidden`.
+-  Add the following include entry to your project's CI/CD configuration and set your input values 
 
-### Dependencies
-- node
+    ```yaml
+    - task: nowsecure-azure-extension@<tag>
+      inputs:
+        binary_file: '<path-to-binary>'
+        group: '<group-ref>'
+        token: $NS_TOKEN
+    ```
 
-### Making Changes
+   - `<tag>` is the release tag you want to use 
 
-The core functionality is handled by the `nowsecure-ci` golang binary. The logic in `Nowsecure/index.ts` is merely a wrapper around that binary file.
+   - `<group-ref>` is uuid of the group that will be used to trigger assessments. Information on how to get the group reference can be found in the [NowSecure Support Portal](https://support.nowsecure.com).
+   - `<path-to-binary>` is the filepath for the ipa / apk that is to be uploaded to run an assessments against. Ideally this will be an artifact of some previous build step in a pipeline.
+   - `$NS_TOKEN` is the token used to communicate with the NowSecure API. This token should be an [Azure Devops Secret Variable](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/set-secret-variables?view=azure-devops&tabs=yaml%2Cbash#secret-variable-in-the-ui). Information on how to create a token can be found in the [NowSecure Support Portal](http://support.nowsecure.com/).
 
-To adjust any of the inputs / default values edit the `nowsecure/task.json`
+### Installation
 
-To adjust any of the wrapper logic, edit `nowsecure/index.ts`
+Find it in [Azure Devops Marketplace](https://marketplace.visualstudio.com/azuredevops) using "NowSecure Azure Extension"
 
-### Building
+Then install it following [Microsoft's instructions](https://learn.microsoft.com/en-us/azure/devops/marketplace/install-extension?view=azure-devops) on installing Azure Devops Marketplace extensions.
 
-There is a convenience bash script, `publish` which can handle packaging and publishing the ADO extension. 
+*NOTE:* Currently, compatibility is limited to Windows or Linux platforms running an X64 architecture. In order for the extension to work, please make sure you have an appropriate `vmImage`. 
 
-To package for testing in the QA environment, run the following:
+### Sample Configurations
 
-``` shell
-ENV=QA ./publish package
+#### Sample Build Pipeline for Android
+```yaml
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: Gradle@4
+  inputs:
+    cwd: ''
+    wrapperScript: 'gradlew'
+    gradleOpts: '-Xmx3072m'
+    publishJUnitResults: false
+    testResultsFiles: '**/TEST-*.xml'
+    tasks: 'assembleDebug'
+- task: CopyFiles@2
+  inputs:
+    contents: '**/*.apk'
+    targetFolder: '$(build.artifactStagingDirectory)'
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(build.artifactStagingDirectory)'
+    artifactName: 'drop'
+    artifactType: 'container'
+- task: nowsecure-azure-extension@1
+  inputs:
+    # Required inputs
+    group: "0000-00000-0000-0000"
+    token: $NS_TOKEN
+    binary_file: "path-to-artifact.apk"
+    # Common optional parameters
+    minimum_score: 70
+    analysis_type: static
+    polling_duration_minutes: 30
+```
+Note: "task: nowsecure-azure-extension@1" is the main task for security analysis and other tasks above are used to generate Android apk file.
+
+#### Publish/View Artifacts
+You can add task to publish artifacts (API results) from the Nowsecure Azure Extension task as shown:
+```yaml
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(build.artifactStagingDirectory)'
+    artifactName: 'nowsecure'
+    artifactType: 'container'
 ```
 
-This will create a `.vsix` file which can be uploaded to the [QA storefront](https://marketplace.visualstudio.com/publishers/qa-nowsecure) 
-
-## Deploying
-This should be handled automatically by a Github Action in the future, but the bash script in this repo can also publish directly to the [public storefront](https://marketplace.visualstudio.com/publishers/Nowsecure-com)
-
-```
-ENV=PROD TOKEN=<some-token> ./publish publish
+##### Debugging
+To enable debug-level logging for the NowSecure Azure Extension, add the `log_level` input with the `'debug'` option as shown below:
+```yaml
+- task: nowsecure-azure-extension@1
+  inputs:
+    # Required inputs
+    group: "0000-00000-0000-0000"
+    token: $NS_TOKEN
+    binary_file: "path-to-artifact.apk"
+    # Enable Debug Level Logging
+    log_level: 'debug'
 ```

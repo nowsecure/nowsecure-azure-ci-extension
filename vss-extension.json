@@ -33,7 +33,7 @@
             "addressable": true
         },
         {
-            "path": "overview.md",
+            "path": "README.md",
             "addressable": true
         },
         {
@@ -55,7 +55,7 @@
     ],
     "content": {
         "details": {
-            "path": "overview.md"
+            "path": "README.md"
         },
         "license": {
             "path": "LICENSE"
