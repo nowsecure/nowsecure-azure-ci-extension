@@ -51,7 +51,7 @@ function toolName(arch: Arch, platform: tl.Platform): string {
 function getTool(): ToolRunner {
   const platform = tl.getPlatform();
   const arch = archFrom(tl.getVariable("Agent.OSArchitecture"));
-  const binaryDirectory = join(__dirname, "bin")
+  const binaryDirectory = join(__dirname, "bin");
   const toolPath = join(binaryDirectory, toolName(arch, platform));
 
   if (!existsSync(toolPath)) {
