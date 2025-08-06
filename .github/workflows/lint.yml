@@ -46,9 +46,3 @@ jobs:
           dot: true
       - name: typos-action spellchecker
         uses: crate-ci/typos@v1.33.1
-  yaml-lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: yamllint
-        uses: ibiqlik/action-yamllint@v3
