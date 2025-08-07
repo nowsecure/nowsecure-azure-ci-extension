@@ -1,0 +1,121 @@
+name: Workflow
+
+on:
+  pull_request:
+  push:
+    tags:
+      - "v*.*.*"
+    branches: [ "main" ]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./nowsecure
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: ./nowsecure
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Build
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: ./nowsecure/dist/
+
+  package:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: ./nowsecure/dist/
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: ./nowsecure
+
+      - name: Install TFX
+        run: npm install -g tfx-cli
+
+      - name: Package Extension
+        run: tfx extension create --manifest-globs vss-extension.json
+
+      - name: Upload VSIX
+        uses: actions/upload-artifact@v4
+        with:
+          name: vsix-pr-${{ github.event.pull_request.number }}
+          path: '*.vsix'
+
+  qa-publish:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: ./nowsecure/dist/
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install TFX
+        run: npm install -g tfx-cli
+
+      - name: Ensure Version Consistency
+        run: |
+          tfx extension publish \
+              --manifest-globs vss-extension.json \
+              --share-with qa-nowsecure \
+              --token $QA_TOKEN
+
+  public-publish:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Build
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: ./nowsecure/dist/
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install TFX
+        run: npm install -g tfx-cli
+
+      - name: Ensure Version Consistency
+        run: |
+          tfx extension publish \
+            --manifest-globs vss-extension.json \
+            --overrides-file prod-overrides.json
+            --token $PRD_TOKEN
