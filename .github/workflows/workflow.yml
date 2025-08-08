@@ -58,7 +58,10 @@ jobs:
         run: npm install -g tfx-cli
 
       - name: Package Extension
-        run: tfx extension create --manifest-globs vss-extension.json
+        run: |
+          tfx extension create \
+              --manifest-globs vss-extension.json \
+              --share-with nowsecure-test
 
       - name: Upload VSIX
         uses: actions/upload-artifact@v4
@@ -90,7 +93,7 @@ jobs:
         run: |
           tfx extension publish \
               --manifest-globs vss-extension.json \
-              --share-with qa-nowsecure \
+              --share-with nowsecure-test \
               --token $QA_TOKEN
 
   public-publish:
