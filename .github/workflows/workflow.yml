@@ -61,7 +61,6 @@ jobs:
         run: |
           tfx extension create \
               --manifest-globs vss-extension.json \
-              --share-with nowsecure-test \
               --overrides-file dev-overrides.json
 
       - name: Upload VSIX
