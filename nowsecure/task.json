@@ -130,7 +130,7 @@
     ],
     "execution": {
         "Node20_1": {
-            "target": "dist/index.js"
+            "target": "index.js"
         }
     }
 }
