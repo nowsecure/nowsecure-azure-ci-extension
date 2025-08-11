@@ -62,7 +62,7 @@ jobs:
           tfx extension create \
               --manifest-globs vss-extension.json \
               --share-with nowsecure-test \
-              --overrides-file qa-overrides.json
+              --overrides-file dev-overrides.json
 
       - name: Upload VSIX
         uses: actions/upload-artifact@v4
