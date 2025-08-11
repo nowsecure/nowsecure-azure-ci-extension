@@ -1,5 +1,3 @@
 {
-    "id": "nowsecure-azure-ci-extension",
-    "public": true,
-    "publisher": "Nowsecure-com"
+    "public": true
 }
