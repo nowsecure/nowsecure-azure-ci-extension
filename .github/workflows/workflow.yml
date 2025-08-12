@@ -89,13 +89,13 @@ jobs:
       - name: Install TFX
         run: npm install -g tfx-cli
 
-      - name: Ensure Version Consistency
+      - name: Publish QA Extension
         run: |
           tfx extension publish \
               --manifest-globs vss-extension.json \
               --share-with nowsecure-test \
               --overrides-file qa-overrides.json \
-              --token $QA_TOKEN
+              --token ${{ secrets.QA_TOKEN }}
 
   public-publish:
     needs: build
@@ -117,9 +117,9 @@ jobs:
       - name: Install TFX
         run: npm install -g tfx-cli
 
-      - name: Ensure Version Consistency
+      - name: Publish Public Extension
         run: |
           tfx extension publish \
             --manifest-globs vss-extension.json \
             --overrides-file prod-overrides.json \
-            --token $PRD_TOKEN
+            --token ${{ secrets.PRD_TOKEN }}
