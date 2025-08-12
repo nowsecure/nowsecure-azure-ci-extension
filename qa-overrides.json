@@ -1,0 +1,6 @@
+{
+    "id": "qa-nowsecure-azure-ci-extension",
+    "name": "qa-nowsecure-azure-ci-extension",
+    "public": false,
+    "publisher": "qa-nowsecure"
+}

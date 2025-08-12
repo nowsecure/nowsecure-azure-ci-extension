@@ -1,10 +1,10 @@
 {
     "manifestVersion": 1,
-    "id": "nowsecure-azure-ci-extension-qa",
+    "id": "nowsecure-azure-ci-extension",
     "name": "nowsecure-azure-ci-extension",
     "description": "Azure Extension for NowSecure Security Assessment",
-    "version": "0.0.1",
-    "publisher": "qa-nowsecure",
+    "version": "0.0.2",
+    "publisher": "Nowsecure-com",
     "public": false,
     "targets": [
         {
@@ -43,13 +43,13 @@
     ],
     "contributions": [
         {
-            "id": "custom-build-release-task",
+            "id": "nowsecure-azure-ci-extension",
             "type": "ms.vss-distributed-task.task",
             "targets": [
                 "ms.vss-distributed-task.tasks"
             ],
             "properties": {
-                "name": "buildandreleasetask"
+                "name": "nowsecure"
             }
         }
     ],
