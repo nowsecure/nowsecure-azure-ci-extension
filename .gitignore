@@ -140,5 +140,7 @@ vite.config.ts.timestamp-*
 
 # vsix packages
 *.vsix
-# build ts
+# built ts
 index.js
+# direnv stuff
+.direnv/

@@ -14,8 +14,8 @@
     ],
     "version": {
         "Major": 0,
-        "Minor": 0,
-        "Patch": 3
+        "Minor": 1,
+        "Patch": 0
     },
     "instanceNameFormat": "nowsecure-azure-ci-extension $(filepath)",
     "groups": [
