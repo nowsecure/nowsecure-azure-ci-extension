@@ -52,7 +52,8 @@ Currently there are three tiers of creating / publishing artifacts:
 
 - Every PR event will trigger a build and packing of this repository.
 The assembled `.vsix` file will be uploaded as a pipeline artifact afterwards called `dev-nowsecure-azure-ci-extension`
-  - This assembled extension can be manually uploaded to
+  - This assembled extension can be manually uploaded to the [Marketplace Management Portal](https://aka.ms/vsmarketplace-manage)
+  - Refer to the [Azure guide](https://learn.microsoft.com/en-us/azure/devops/extend/publish/overview?toc=%2Fazure%2Fdevops%2Fmarketplace-extensibility%2Ftoc.json&view=azure-devops) on publishing extensions for more specific instructions
 - Every merge to main will trigger a `qa-publish` job which publishes a private extension called `qa-nowsecure-azure-ci-extension` which is shared with the `nowsecure-test` org in Azure.
 This should allow for internal testing before publicly publishing any extension
 - Every tag creation will trigger a `prod-publish` job which publishes a public extension called `nowsecure-azure-ci-extension`
