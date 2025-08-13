@@ -1,6 +1,6 @@
 {
   "name": "nowsecure-azure-ci-extension",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Node wrapper for nowsecure-ci binary",
   "main": "index.js",
   "scripts": {
@@ -9,8 +9,8 @@
     "pre-package": "npm ci && npm run build"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "nowsecure",
+  "license": "MIT",
   "dependencies": {
     "@types/node": "^24.0.12",
     "azure-pipelines-task-lib": "^5.2.1"
