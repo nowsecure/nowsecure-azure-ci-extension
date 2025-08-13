@@ -119,15 +119,17 @@ async function run() {
     .arg("file")
     .arg(inputs.filepath)
     .line(`--group-ref ${inputs.group}`)
-    .line(`--token ${inputs.token}`)
-    .line(`--output ${join(inputs.artifact_dir, "assessment.json")}`)
     .line(`--api-host ${inputs.api_host}`)
     .line(`--ui-host ${inputs.ui_host}`)
     .line(`--log-level ${inputs.log_level}`)
     .line(`--analysis-type ${inputs.analysisType}`)
+    .line("--save-findings")
+    .line(`--artifacts-dir ${inputs.artifact_dir}`)
+    .line(`--output ${join(inputs.artifact_dir, "assessment.json")}`)
     .line(`--minimum-score ${inputs.minimum_score}`)
     .line(`--poll-for-minutes ${inputs.polling_duration_minutes}`)
-    .line(`--ci-environment azure-${version}`);
+    .line(`--ci-environment azure-${version}`)
+    .line(`--token ${inputs.token}`);
 
   ns.on("stdout", (data: Buffer) => {
     console.log(data.toString());
