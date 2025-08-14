@@ -13,7 +13,7 @@ To add this component to your CI/CD pipeline, the following should be done:
 
 - Get a token from your NowSecure platform instance. More information on this can be found in the [NowSecure Support Portal](https://support.nowsecure.com/hc/en-us/articles/7499657262093-Creating-a-NowSecure-Platform-API-Bearer-Token)
 - Identify the ID of the group in NowSecure Platform that you want your assessment to be included in. More information on this can be found in the
-  [NowSecure Support Portal](https://support.nowsecure.com/hc/en-us/articles/6290991166605-Getting-Started-with-Groups#h_01G396F6CTEZ4P6G5Z1FDGJ12K).
+  [NowSecure Support Portal](https://support.nowsecure.com/hc/en-us/articles/38057956447757-Retrieve-Reference-and-ID-Numbers-for-API-Use-Task-ID-Group-App-and-Assessment-Ref).
   (Note: Authentication is required to access this page)
 - Add a CI/CD variable to your project named, `NS_TOKEN` and add the token created above. As this is a credential, be sure to check the box labeled `Keep this value secret`.
 - Add the following include entry to your project's CI/CD configuration and set your input values
@@ -29,7 +29,7 @@ To add this component to your CI/CD pipeline, the following should be done:
   - `<tag>` is the release tag you want to use
 
   - `<group-ref>` is uuid of the group that will be used to trigger assessments.
-    Information on how to get the group reference can be found in the [NowSecure Support Portal](https://support.nowsecure.com).
+    Information on how to get the group reference can be found in the [NowSecure Support Portal](https://support.nowsecure.com/hc/en-us/articles/38057956447757-Retrieve-Reference-and-ID-Numbers-for-API-Use-Task-ID-Group-App-and-Assessment-Ref).
   - `<path-to-binary>` is the filepath for the ipa / apk that is to be uploaded to run an assessments against. Ideally this will be an artifact of some previous build step in a pipeline.
   - `$NS_TOKEN` is the token used to communicate with the NowSecure API. This token should be an
     [Azure Devops Secret Variable](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/set-secret-variables?view=azure-devops&tabs=yaml%2Cbash#secret-variable-in-the-ui).
