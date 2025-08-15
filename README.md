@@ -45,7 +45,7 @@ To add this component to your CI/CD pipeline, the following should be done:
 
   Where:
 
-  - `task` is specifying the task to run.  In the example, `<tag>` is the release tag of the `nowsecure-azure-ci-extention` that you want to use.  At time, NowSecure recommends setting this to `0.1`
+  - `task` is specifying the task to run.  In the example, `<tag>` is the release tag of the `nowsecure-azure-ci-extension` that you want to use.  At time, NowSecure recommends setting this to `0.1`
   - `group` is the NowSecure platform group to use. `<group-ref>` is the group ID acquired above.
   - `token` is the token used to communicate with the NowSecure API.
     This token should be the Azure DevOps Secret Variable set above.
