@@ -45,7 +45,7 @@ To add this component to your CI/CD pipeline, the following should be done:
 
   Where:
 
-  - `task` is specifying the task to run.  In the example, `<tag>` is the release tag of the `nowsecure-azure-ci-extension` that you want to use.  At time, NowSecure recommends setting this to `0.1`
+  - `task` is specifying the task to run.  In the example, `<tag>` is the release tag of the `nowsecure-azure-ci-extension` that you want to use.  At time, NowSecure recommends setting this to `0`.
   - `group` is the NowSecure platform group to use. `<group-ref>` is the group ID acquired above.
   - `token` is the token used to communicate with the NowSecure API.
     This token should be the Azure DevOps Secret Variable set above.
@@ -68,7 +68,7 @@ The NowSecure Azure CI Extension supports the following parameters:
 | `ui_host` | false | string | Defines the NowSecure base UI to use. This will not change unless you are leveraging a single tenant. | <https://app.nowsecure.com> |
 | `api_host` | false | string | Defines the NowSecure base API to use. This will not change unless you are leveraging a single tenant. | <https://lab-api.nowsecure.com> |
 | `log_level` | false | string | Defines the log level set for the NowSecure analysis task. | `info` |
-| `analysis_type` | false | string |Defines the type of analyst that you want to run.  Options are `static` for a static only assessment or `full` for both a static and dynamic assessment. | ??? |
+| `analysis_type` | false | string |Defines the type of analyst that you want to run.  Options are `static` for a static only assessment or `full` for both a static and dynamic assessment. | `static` |
 | `artifacts_dir`| true | string | Defines the directory for nowsecure artifacts to be output to. In the case of the default assessment results would be `./artifacts/nowsecure/assessment.json` | |
 | `polling_duration_minutes` | false | number | Defines the length of time (in minutes) to poll for job completion. | If `analysis_type` is `static`, 30.  If `full`, 60 |
 | `minimum_score` | false | number | Defines the score under which an assessment will fail | -1 |
