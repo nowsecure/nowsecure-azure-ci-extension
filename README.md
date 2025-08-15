@@ -61,11 +61,11 @@ The NowSecure Azure CI Extension supports the following parameters:
 | `binary_file` | true | string | Defines the path to the mobile application binary to be processed by NowSecure | |
 | `ui_host` | false | string | Defines the NowSecure base UI to use. This will not change unless you are leveraging a single tenant. | https://app.nowsecure.com | 
 | `api_host` | false | string | Defines the NowSecure base API to use. This will not change unless you are leveraging a single tenant. | https://lab-api.nowsecure.com | 
-| `log_level` | false | string | Defines the log level set for the NowSecure analysis task. | info | 
+| `log_level` | false | string | Defines the log level set for the NowSecure analysis task. | `info` | 
 | `analysis_type` | false | string |Defines the type of analyst that you want to run.  Options are `static` for a static only assessment or `full` for both a static and dynamic assessment. | ??? |
 | `artifacts_dir`| true | string | Defines the directory for nowsecure artifacts to be output to. In the case of the default assessment results would be `./artifacts/nowsecure/assessment.json` | | 
 | `polling_duration_minutes` | false | number | Defines the length of time (in minutes) to poll for job completion. | If `analysis_type` is `static`, 30.  If `full`, 60 |
-| minimum_score | false | number | Defines the score under which an assessment will fail | -1 |
+| `minimum_score` | false | number | Defines the score under which an assessment will fail | -1 |
 
 ## Sample Configurations
 
