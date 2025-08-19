@@ -84,6 +84,7 @@ jobs:
       overrides-file: "qa-overrides.json"
       artifact-id: ${{ needs.build.outputs.js-build-artifact }}
       environment: "QA"
+      additional-flags: "--share-with nowsecure-test"
     secrets:
       token: ${{ secrets.QA_TOKEN }}
 
