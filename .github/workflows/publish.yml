@@ -15,6 +15,11 @@ on:
         description: "github environment to run in"
         required: true
         type: string
+      additional-flags:
+        description: "additional flags to provide to the tfx publish command"
+        required: false
+        type: string
+        default: ""
     secrets:
       token:
         description: "Token to use to publish to the marketplace"
@@ -51,6 +56,6 @@ jobs:
         run: |
           tfx extension publish \
               --manifest-globs vss-extension.json \
-              --share-with nowsecure-test \
               --overrides-file ${{ inputs.overrides-file }} \
-              --token ${{ secrets.token }}
+              --token ${{ secrets.token }} \
+              ${{ inputs.additional-flags }}
