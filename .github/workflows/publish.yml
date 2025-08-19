@@ -11,6 +11,9 @@ on:
         description: "artifact-id for the index.js file"
         required: true
         type: string
+      environment:
+        description: "github environment to run in"
+        type: string
     secrets:
       token:
         description: "Token to use to publish to the marketplace"
@@ -19,6 +22,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
       - uses: actions/checkout@v4
 
