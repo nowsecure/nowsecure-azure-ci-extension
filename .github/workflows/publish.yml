@@ -52,5 +52,5 @@ jobs:
           tfx extension publish \
               --manifest-globs vss-extension.json \
               --share-with nowsecure-test \
-              --overrides-file {{ inputs.overrides-file }} \
+              --overrides-file ${{ inputs.overrides-file }} \
               --token ${{ secrets.token }}
