@@ -83,6 +83,7 @@ jobs:
     with:
       overrides-file: "qa-overrides.json"
       artifact-id: ${{ needs.build.outputs.js-build-artifact }}
+      environment: "QA"
     secrets:
       token: ${{ secrets.QA_TOKEN }}
 
