@@ -14,6 +14,8 @@ jobs:
     defaults:
       run:
         working-directory: ./nowsecure
+    outputs:
+      js-build-artifact: ${{ steps.upload-js-artifact.outputs.artifact-id }}
     steps:
       - uses: actions/checkout@v4
 
@@ -31,6 +33,7 @@ jobs:
         run: npm run build
 
       - name: Upload build artifact
+        id: upload-js-artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-output
@@ -44,7 +47,7 @@ jobs:
       - name: Download Build
         uses: actions/download-artifact@v4
         with:
-          name: build-output
+          name: build-output-${{ wl }}
           path: ./nowsecure/
 
       - name: Setup Node
@@ -77,66 +80,21 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v4
-      - name: Download Build
-        uses: actions/download-artifact@v4
-        with:
-          name: build-output
-          path: ./nowsecure/
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-          cache-dependency-path: ./nowsecure
-
-      - name: Install Dependencies
-        working-directory: ./nowsecure
-        run: npm ci
-
-      - name: Install TFX
-        run: npm install -g tfx-cli
-
-      - name: Publish QA Extension
-        run: |
-          tfx extension publish \
-              --manifest-globs vss-extension.json \
-              --share-with nowsecure-test \
-              --overrides-file qa-overrides.json \
-              --token ${{ secrets.QA_TOKEN }}
+    uses: ./.github/workflows/publish.yml
+    with:
+      overrides-file: "qa-overrides.json"
+      artifact-id: ${{ needs.build.outputs.js-build-artifact }}
+    secrets:
+      token: ${{ secrets.QA_TOKEN }}
 
   public-publish:
     needs: build
     runs-on: ubuntu-latest
     environment: production
     if: startsWith(github.ref, 'refs/tags/v')
-    steps:
-      - uses: actions/checkout@v4
-      - name: Download Build
-        uses: actions/download-artifact@v4
-        with:
-          name: build-output
-          path: ./nowsecure/dist/
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-          cache-dependency-path: ./nowsecure
-
-      - name: Install Dependencies
-        working-directory: ./nowsecure
-        run: npm ci
-
-      - name: Install TFX
-        run: npm install -g tfx-cli
-
-      - name: Publish Public Extension
-        run: |
-          tfx extension publish \
-            --manifest-globs vss-extension.json \
-            --overrides-file prod-overrides.json \
-            --token ${{ secrets.PRD_TOKEN }}
+    uses: ./.github/workflows/publish.yml
+    with:
+      overrides-file: "prod-overrides.json"
+      artifact-id: ${{ needs.build.outputs.js-build-artifact }}
+    secrets:
+      token: ${{ secrets.PRD_TOKEN }}
