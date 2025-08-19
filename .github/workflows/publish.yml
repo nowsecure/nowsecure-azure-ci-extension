@@ -49,4 +49,4 @@ jobs:
               --manifest-globs vss-extension.json \
               --share-with nowsecure-test \
               --overrides-file {{ inputs.overrides-file }} \
-              --token ${{ inputs.token }}
+              --token ${{ secrets.token }}
