@@ -48,6 +48,7 @@
             pkgs.biome
             pkgs.markdownlint-cli
             pkgs.typos
+            pkgs.actionlint
           ];
         };
       }

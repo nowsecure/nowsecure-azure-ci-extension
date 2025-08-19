@@ -1,0 +1,56 @@
+name: Publish
+
+on:
+  workflow_call:
+    inputs:
+      overrides-file:
+        description: "filepath for overrides.json file to override vss-extension defaults"
+        required: true
+        type: string
+      artifact-id:
+        description: "artifact-id for the index.js file"
+        required: true
+        type: string
+      environment:
+        description: "github environment to run in"
+        required: true
+        type: string
+    secrets:
+      token:
+        description: "Token to use to publish to the marketplace"
+        required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Build
+        uses: actions/download-artifact@v5
+        with:
+          artifact-ids: ${{ inputs.artifact-id }}
+          path: ./nowsecure
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: ./nowsecure
+
+      - name: Install Dependencies
+        working-directory: ./nowsecure
+        run: npm ci
+
+      - name: Install TFX
+        run: npm install -g tfx-cli
+
+      - name: Publish Extension
+        run: |
+          tfx extension publish \
+              --manifest-globs vss-extension.json \
+              --share-with nowsecure-test \
+              --overrides-file {{ inputs.overrides-file }} \
+              --token ${{ secrets.token }}
