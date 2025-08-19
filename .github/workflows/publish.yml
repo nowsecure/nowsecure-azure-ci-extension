@@ -15,7 +15,6 @@ on:
       token:
         description: "Token to use to publish to the marketplace"
         required: true
-        type: string
 
 jobs:
   publish:
