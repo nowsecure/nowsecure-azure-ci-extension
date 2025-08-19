@@ -80,21 +80,23 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    uses: ./.github/workflows/publish.yml
-    with:
-      overrides-file: "qa-overrides.json"
-      artifact-id: ${{ needs.build.outputs.js-build-artifact }}
-    secrets:
-      token: ${{ secrets.QA_TOKEN }}
+    steps:
+      - uses: ./.github/workflows/publish.yml
+        with:
+          overrides-file: "qa-overrides.json"
+          artifact-id: ${{ needs.build.outputs.js-build-artifact }}
+        secrets:
+          token: ${{ secrets.QA_TOKEN }}
 
   public-publish:
     needs: build
     runs-on: ubuntu-latest
     environment: production
     if: startsWith(github.ref, 'refs/tags/v')
-    uses: ./.github/workflows/publish.yml
-    with:
-      overrides-file: "prod-overrides.json"
-      artifact-id: ${{ needs.build.outputs.js-build-artifact }}
-    secrets:
-      token: ${{ secrets.PRD_TOKEN }}
+    steps:
+    - uses: ./.github/workflows/publish.yml
+      with:
+        overrides-file: "prod-overrides.json"
+        artifact-id: ${{ needs.build.outputs.js-build-artifact }}
+      secrets:
+        token: ${{ secrets.PRD_TOKEN }}
