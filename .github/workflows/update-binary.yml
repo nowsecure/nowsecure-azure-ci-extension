@@ -40,9 +40,13 @@ jobs:
           PR_TITLE="chore(deps): update nowsecure-ci binary to ${{ env.LATEST_VERSION }}"
           BRANCH_NAME="chore/ns-binary/${{ env.LATEST_VERSION }}"
 
+          git config --global user.email "devops@nowsecure.com"
+          git config --global user.name "Nora The Narwhal"
+
           if [[ -n "$(git status --porcelain)" ]]; then
             git checkout -b "$BRANCH_NAME"
             git add .
             git commit -m "$PR_TITLE"
+            git push
             gh pr create --title "$PR_TITLE" --body "# NowSecure CI Release Notes \n ${{ env.RELEASE_NOTES }}"
           fi
