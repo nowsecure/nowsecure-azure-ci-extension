@@ -14,7 +14,7 @@ jobs:
       - name: Get Latest Release
         working-directory: ./nowsecure/bin
         env:
-          DEV_API_KEY: ${{ secrets.DEV_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           LATEST_VERSION=$(gh release --repo nowsecure/nowsecure-ci view --json tagName --jq '.tagName')
           CURRENT_VERSION=$(cat version)
@@ -22,17 +22,17 @@ jobs:
           if [ "$LATEST_VERSION" = "$CURRENT_VERSION" ]; then
             echo "Current version ($CURRENT_VERSION) is latest"
           else
-            echo $LATEST_VERSION > version
+            echo "$LATEST_VERSION" > version
 
             gh release --repo nowsecure/nowsecureci download --clobber \
               --pattern 'ns_darwin-arm64' \
               --pattern 'ns_linux-amd64' \
               --pattern 'ns_windows-amd64'
 
-            echo "RELEASE_NOTES=$(gh release --repo nowsecure/nowsecure-ci view --json body --jq '.body') >> $GITHUB_ENV
+            echo "RELEASE_NOTES=$(gh release --repo nowsecure/nowsecure-ci view --json body --jq '.body')" >> "$GITHUB_ENV"
           fi
 
-          echo "LATEST_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
+          echo "LATEST_VERSION=$LATEST_VERSION" >> "$GITHUB_ENV"
 
       - name: Commit changes
         working-directory: ./nowsecure/bin
@@ -41,7 +41,7 @@ jobs:
           BRANCH_NAME="chore/ns-binary/${{ env.LATEST_VERSION }}"
 
           if [[ -n "$(git status --porcelain)" ]]; then
-            git checkout -b $BRANCH_NAME
+            git checkout -b "$BRANCH_NAME"
             git add .
             git commit -m "$PR_TITLE"
             gh pr create --title "$PR_TITLE" --body "# NowSecure CI Release Notes \n ${{ env.RELEASE_NOTES }}"
