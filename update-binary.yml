@@ -27,7 +27,7 @@ jobs:
             gh release --repo nowsecure/nowsecureci download --clobber \
               --pattern 'ns_darwin-arm64' \
               --pattern 'ns_linux-amd64' \
-              --patern 'ns_windows-amd64'
+              --pattern 'ns_windows-amd64'
 
             echo "RELEASE_NOTES=$(gh release --repo nowsecure/nowsecure-ci view --json body --jq '.body') >> $GITHUB_ENV
           fi
