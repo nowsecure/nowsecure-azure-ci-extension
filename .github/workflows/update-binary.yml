@@ -24,10 +24,17 @@ jobs:
           else
             echo "$LATEST_VERSION" > version
 
+            find . -name 'ns_*' -delete
+
             gh release --repo nowsecure/nowsecureci download --clobber \
-              --pattern 'ns_darwin-arm64' \
-              --pattern 'ns_linux-amd64' \
-              --pattern 'ns_windows-amd64'
+              --pattern 'ns_darwin-arm64*' \
+              --pattern 'ns_linux-amd64*' \
+              --pattern 'ns_windows-amd64*'
+
+            # Github release has tgz and zip files, each containing license and readme files
+            find . -name '*.tgz' -exec tar -xzf {} \;
+            find . -name '*.zip' -exec unzip {} \;
+            rm LICENSE README.md
 
             echo "RELEASE_NOTES=$(gh release --repo nowsecure/nowsecure-ci view --json body --jq '.body')" >> "$GITHUB_ENV"
           fi
