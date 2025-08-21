@@ -5,8 +5,7 @@ on:
   push:
     tags:
       - "v*.*.*"
-    branches: [ "main" ]
-
+    branches: ["main"]
 
 jobs:
   build:
@@ -23,7 +22,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: ./nowsecure
 
       - name: Install Dependencies
@@ -39,42 +38,17 @@ jobs:
           name: build-output
           path: ./nowsecure/index.js
 
-  package:
+  dev-publish:
     needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Download Build
-        uses: actions/download-artifact@v5
-        with:
-          artifact-ids: ${{ needs.build.outputs.js-build-artifact }}
-          path: ./nowsecure
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-          cache-dependency-path: ./nowsecure
-
-      - name: Install Dependencies
-        working-directory: ./nowsecure
-        run: npm ci
-
-      - name: Install TFX
-        run: npm install -g tfx-cli
-
-      - name: Package Extension
-        run: |
-          tfx extension create \
-              --manifest-globs vss-extension.json \
-              --overrides-file dev-overrides.json
-
-      - name: Upload VSIX
-        uses: actions/upload-artifact@v4
-        with:
-          name: vsix-pr-${{ github.event.pull_request.number }}
-          path: '*.vsix'
+    uses: ./.github/workflows/publish.yml
+    with:
+      overrides-file: "dev-overrides.json"
+      artifact-id: ${{ needs.build.outputs.js-build-artifact }}
+      environment: "development"
+      additional-flags: "--share-with nowsecure-test"
+      unpublish: true
+    secrets:
+      token: ${{ secrets.QA_TOKEN }}
 
   qa-publish:
     needs: build
@@ -85,6 +59,7 @@ jobs:
       artifact-id: ${{ needs.build.outputs.js-build-artifact }}
       environment: "QA"
       additional-flags: "--share-with nowsecure-test"
+      unpublish: true
     secrets:
       token: ${{ secrets.QA_TOKEN }}
 

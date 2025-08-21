@@ -3,6 +3,13 @@ name: Publish
 on:
   workflow_call:
     inputs:
+      unpublish:
+        description: |
+          Unpublish the extension before attempting to publish the current version.
+          Useful for dev and QA environments where you don't care about the consistency of a published version
+        required: false
+        type: boolean
+        default: false
       overrides-file:
         description: "filepath for overrides.json file to override vss-extension defaults"
         required: true
@@ -42,7 +49,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: ./nowsecure
 
       - name: Install Dependencies
@@ -51,6 +58,14 @@ jobs:
 
       - name: Install TFX
         run: npm install -g tfx-cli
+
+      - name: Unpublish Extension
+        if: ${{ inputs.unpublish }}
+        run: |
+          tfx extension unpublish \
+              --publisher "$(jq -r '.publisher' < ${{ inputs.overrides-file }})" \
+              --extension-id "$(jq -r '.id' < ${{ inputs.overrides-file }})" \
+              --token ${{ secrets.token }}
 
       - name: Publish Extension
         run: |
