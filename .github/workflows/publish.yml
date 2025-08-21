@@ -5,7 +5,7 @@ on:
     inputs:
       unpublish:
         description: |
-          Unpublish the extenion before attempting to publish the current version.
+          Unpublish the extension before attempting to publish the current version.
           Useful for dev and QA environments where you don't care about the consistency of a published version
         required: false
         type: boolean
