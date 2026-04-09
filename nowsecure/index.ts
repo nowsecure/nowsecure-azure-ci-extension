@@ -52,11 +52,11 @@ function getTool(): ToolRunner {
   const platform = tl.getPlatform();
   const arch = archFrom(tl.getVariable("Agent.OSArchitecture"));
   const binaryDirectory = join(__dirname, "bin");
-  const toolPath = join(binaryDirectory, toolName(arch, platform));
+  const binaryName = toolName(arch, platform);
+  const toolPath = join(binaryDirectory, binaryName);
 
   if (!existsSync(toolPath)) {
-    const err =
-      "Unsupported runner type. Integration currently supports darwin/arm64, windows/amd64, and linux/amd64";
+    const err = `Unsupported runner type: ${binaryName}. Integration currently supports darwin/arm64, windows/amd64, and linux/amd64`;
     throw new Error(err);
   }
 

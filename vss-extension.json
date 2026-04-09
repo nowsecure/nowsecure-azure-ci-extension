@@ -3,7 +3,7 @@
     "id": "nowsecure-azure-ci-extension",
     "name": "NowSecure Azure CI Extension",
     "description": "Azure Extension for NowSecure Security Assessment",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "publisher": "Nowsecure-com",
     "public": false,
     "targets": [
@@ -11,16 +11,8 @@
             "id": "Microsoft.VisualStudio.Services"
         }
     ],
-    "tags": [
-        "mobile",
-        "dast",
-        "mast",
-        "security",
-        "nowsecure"
-    ],
-    "categories": [
-        "Azure Pipelines"
-    ],
+    "tags": ["mobile", "dast", "mast", "security", "nowsecure"],
+    "categories": ["Azure Pipelines"],
     "icons": {
         "default": "images/extension-icon.png"
     },
@@ -45,9 +37,7 @@
         {
             "id": "nowsecure-azure-ci-extension",
             "type": "ms.vss-distributed-task.task",
-            "targets": [
-                "ms.vss-distributed-task.tasks"
-            ],
+            "targets": ["ms.vss-distributed-task.tasks"],
             "properties": {
                 "name": "nowsecure"
             }
