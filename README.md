@@ -139,10 +139,9 @@ steps:
 ### iOS — Static Scan (Multi-Job)
 
 iOS apps must be built on a macOS runner. The `nowsecure-azure-ci-extension` task supports Linux (x64),
-Windows (x64), and macOS (ARM64) runners — however, if you are creating a new pipeline and are not
-grandfathered into Microsoft's hosted ARM64 macOS runners (which are currently paused), running the task
-on a macOS `vmImage` will fail. The solution is to split the pipeline into two jobs: build on macOS, then
-pass the `.ipa` artifact to a Linux runner for the NowSecure scan.
+Windows (x64), and macOS (ARM64) runners. If your pipeline is using macOS (AMD64) runners, you must split
+the pipeline into two jobs: first build on macOS, then pass the `.ipa` artifact to a Linux runner for the
+NowSecure scan as per the example below:
 
 ```yaml
 jobs:
