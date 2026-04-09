@@ -21,10 +21,10 @@ function platformToString(platform: tl.Platform) {
 }
 
 function chmodx(toolPath: string, platform: tl.Platform) {
-  if (platform !== tl.Platform.Windows) {
-    tl.execSync("chmod", ["u+x", toolPath]);
-  } else {
+  if (platform === tl.Platform.Windows) {
     tl.execSync("attrib", ["+x", toolPath]);
+  } else {
+    tl.execSync("chmod", ["u+x", toolPath]);
   }
 }
 
