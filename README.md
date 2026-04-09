@@ -16,27 +16,43 @@ Before installing this extension, ensure you have the following:
 - **Supported runner (vmImage)** — the task runs on Windows/Linux (x64) or macOS (ARM). Ensure your pipeline's `vmImage` matches one of these architectures.
 
 > [!NOTE]
-> [Hosted macOS ARM64 images have been paused by Microsoft.](https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=macos-images%2Cyaml#macos-15-arm64-image-limited-public-preview-paused) If your pipelines are using a `macOS` `vmImage`, please ensure one of the following applies:
+> [Hosted macOS ARM64 images have been paused by Microsoft.][arm64-paused]
+> If your pipelines are using a `macOS` `vmImage`, please ensure one of the following applies:
 >
 > - you are using self-hosted runners
 > - you are grandfathered-in to hosted ARM64 runners
-> - you are running the `nowsecure-azure-ci-extension` task in a separate job with a supported `vmImage` (see the [iOS example pipeline](#ios--static-scan-multi-job) below)
+> - you are running the `nowsecure-azure-ci-extension` task in a separate job with a supported `vmImage`
+>   (see the [iOS example pipeline](#ios--static-scan-multi-job) below)
+
+[arm64-paused]: https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops&tabs=macos-images%2Cyaml#macos-15-arm64-image-limited-public-preview-paused
 
 ## Getting Started
 
 ### 1. Install the Extension
 
-Find and install the extension from the [Azure DevOps Marketplace](https://marketplace.visualstudio.com/items?itemName=Nowsecure-com.nowsecure-azure-ci-extension), following [Microsoft's guide on installing Marketplace extensions](https://learn.microsoft.com/en-us/azure/devops/marketplace/install-extension?view=azure-devops).
+Find and install the extension from the [Azure DevOps Marketplace][marketplace],
+following [Microsoft's guide on installing Marketplace extensions][ms-install-guide].
+
+[marketplace]: https://marketplace.visualstudio.com/items?itemName=Nowsecure-com.nowsecure-azure-ci-extension
+[ms-install-guide]: https://learn.microsoft.com/en-us/azure/devops/marketplace/install-extension?view=azure-devops
 
 ### 2. Create a NowSecure API Token
 
-Generate an API token from your NowSecure platform instance. See the [NowSecure Support Portal](https://support.nowsecure.com/hc/en-us/articles/7499657262093-Creating-a-NowSecure-Platform-API-Bearer-Token) for instructions.
+Generate an API token from your NowSecure platform instance. See the
+[NowSecure Support Portal][create-token] for instructions.
 
-Once you have the token, store it as an [Azure DevOps secret variable](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/set-secret-variables?view=azure-devops&tabs=yaml%2Cbash#secret-variable-in-the-ui). In our examples, we'll call it `NS_TOKEN`.
+Once you have the token, store it as an [Azure DevOps secret variable][secret-var].
+In our examples, we'll call it `NS_TOKEN`.
+
+[create-token]: https://support.nowsecure.com/hc/en-us/articles/7499657262093-Creating-a-NowSecure-Platform-API-Bearer-Token
+[secret-var]: https://learn.microsoft.com/en-us/azure/devops/pipelines/process/set-secret-variables?view=azure-devops&tabs=yaml%2Cbash#secret-variable-in-the-ui
 
 ### 3. Get Your NowSecure Group ID
 
-Identify the ID of the NowSecure platform group you want assessments assigned to. See the [NowSecure Support Portal](https://support.nowsecure.com/hc/en-us/articles/38057956447757-Retrieve-Reference-and-ID-Numbers-for-API-Use-Task-ID-Group-App-and-Assessment-Ref) for instructions.
+Identify the ID of the NowSecure platform group you want assessments assigned to.
+See the [NowSecure Support Portal][retrieve-ids] for instructions.
+
+[retrieve-ids]: https://support.nowsecure.com/hc/en-us/articles/38057956447757-Retrieve-Reference-and-ID-Numbers-for-API-Use-Task-ID-Group-App-and-Assessment-Ref
 
 ### 4. Add the Task to Your Pipeline
 
@@ -58,12 +74,12 @@ Add the following to your pipeline YAML after your build step:
 ## Input Reference
 
 | Name | Required | Type | Default | Description |
-|------|----------|------|---------|-------------|
-| `group` | Yes | string | | The NowSecure platform group to assign assessments to. See the [NowSecure Support Portal](https://support.nowsecure.com/hc/en-us/articles/38057956447757-Retrieve-Reference-and-ID-Numbers-for-API-Use-Task-ID-Group-App-and-Assessment-Ref) for how to retrieve this value. |
-| `token` | Yes | string | | The API token used to authenticate with NowSecure. Store this as an Azure DevOps secret variable. See the [NowSecure Support Portal](https://support.nowsecure.com/hc/en-us/articles/7499657262093-Creating-a-NowSecure-Platform-API-Bearer-Token) for how to create one. |
+| ---- | -------- | ---- | ------- | ----------- |
+| `group` | Yes | string | | The NowSecure platform group to assign assessments to. See the [NowSecure Support Portal][retrieve-ids] for how to retrieve this value. |
+| `token` | Yes | string | | The API token used to authenticate with NowSecure. Store this as an Azure DevOps secret variable. See the [NowSecure Support Portal][create-token] for how to create one. |
 | `binary_file` | Yes | string | | Path to the mobile app binary (`.apk` or `.ipa`) to upload to NowSecure. This is typically an artifact produced by a prior build step. |
-| `artifact_dir` | Yes | string | | Directory where assessment result artifacts will be written. For example, `$(build.artifactStagingDirectory)/NowSecureArtifacts` will produce results at `<artifact_dir>/nowsecure/assessment.json`. |
-| `analysis_type` | No | string | `static` | The type of assessment to run. Use `static` for static-only analysis, or `full` for both static and dynamic analysis. NowSecure recommends `static` for pull requests and `full` for tagged releases. |
+| `artifact_dir` | Yes | string | | Directory where artifacts will be written, e.g. `$(build.artifactStagingDirectory)/NowSecureArtifacts`. Results are at `<artifact_dir>/nowsecure/assessment.json`. |
+| `analysis_type` | No | string | `static` | Assessment type: `static` for static-only, or `full` for static and dynamic. Recommend `static` for PRs and `full` for tagged releases. |
 | `minimum_score` | No | number | `-1` | The minimum security score required to pass. If the assessment score falls below this threshold, the pipeline will fail. Set to `-1` to disable score gating. |
 | `polling_duration_minutes` | No | number | `30` (static), `60` (full) | How long (in minutes) to poll for assessment completion before timing out. |
 | `log_level` | No | string | `info` | Log verbosity for the task. Valid values: `info`, `debug`. |
@@ -122,7 +138,12 @@ steps:
 
 ### iOS — Static Scan (Multi-Job)
 
-iOS apps must be built on a macOS runner. The `nowsecure-azure-ci-extension` task supports Linux (x64), Windows (x64), and macOS (ARM64) runners — however, if you are creating a new pipeline and are not grandfathered into Microsoft's hosted ARM64 macOS runners (which are currently paused), running the task on a macOS `vmImage` will fail. The solution is to split the pipeline into two jobs: build on macOS, then pass the `.ipa` artifact to a Linux runner for the NowSecure scan. This also has the benefit of keeping the more expensive macOS runner time scoped only to the build step.
+iOS apps must be built on a macOS runner. The `nowsecure-azure-ci-extension` task supports Linux (x64),
+Windows (x64), and macOS (ARM64) runners — however, if you are creating a new pipeline and are not
+grandfathered into Microsoft's hosted ARM64 macOS runners (which are currently paused), running the task
+on a macOS `vmImage` will fail. The solution is to split the pipeline into two jobs: build on macOS, then
+pass the `.ipa` artifact to a Linux runner for the NowSecure scan. This also has the benefit of keeping
+the more expensive macOS runner time scoped only to the build step.
 
 ```yaml
 jobs:
