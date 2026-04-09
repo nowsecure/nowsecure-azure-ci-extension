@@ -142,8 +142,7 @@ iOS apps must be built on a macOS runner. The `nowsecure-azure-ci-extension` tas
 Windows (x64), and macOS (ARM64) runners — however, if you are creating a new pipeline and are not
 grandfathered into Microsoft's hosted ARM64 macOS runners (which are currently paused), running the task
 on a macOS `vmImage` will fail. The solution is to split the pipeline into two jobs: build on macOS, then
-pass the `.ipa` artifact to a Linux runner for the NowSecure scan. This also has the benefit of keeping
-the more expensive macOS runner time scoped only to the build step.
+pass the `.ipa` artifact to a Linux runner for the NowSecure scan.
 
 ```yaml
 jobs:
