@@ -46,7 +46,7 @@ jobs:
       artifact-id: ${{ needs.build.outputs.js-build-artifact }}
       environment: "development"
       additional-flags: "--share-with nowsecure-test"
-      unpublish: true
+      unpublish: false
     secrets:
       token: ${{ secrets.QA_TOKEN }}
 
@@ -59,7 +59,7 @@ jobs:
       artifact-id: ${{ needs.build.outputs.js-build-artifact }}
       environment: "QA"
       additional-flags: "--share-with nowsecure-test"
-      unpublish: true
+      unpublish: false
     secrets:
       token: ${{ secrets.QA_TOKEN }}
 
