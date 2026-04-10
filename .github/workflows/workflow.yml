@@ -16,10 +16,10 @@ jobs:
     outputs:
       js-build-artifact: ${{ steps.upload-js-artifact.outputs.artifact-id }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: 20
           cache: "npm"
@@ -46,7 +46,7 @@ jobs:
       artifact-id: ${{ needs.build.outputs.js-build-artifact }}
       environment: "development"
       additional-flags: "--share-with nowsecure-test"
-      unpublish: true
+      unpublish: false
     secrets:
       token: ${{ secrets.QA_TOKEN }}
 
@@ -59,7 +59,7 @@ jobs:
       artifact-id: ${{ needs.build.outputs.js-build-artifact }}
       environment: "QA"
       additional-flags: "--share-with nowsecure-test"
-      unpublish: true
+      unpublish: false
     secrets:
       token: ${{ secrets.QA_TOKEN }}
 

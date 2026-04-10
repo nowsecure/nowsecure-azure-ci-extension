@@ -24,11 +24,11 @@
             owner = "microsoft";
             repo = "tfs-cli";
             # Pinning to a commit sha because they appear not to use tags or releases
-            rev = "78b358bb5794706714643e30ec961122d99443c0";
-            sha256 = "sha256-2LTWlueh2ZB7y8eVrD+aeF9ERNmFQONBLy1b9KRHaVY=";
+            rev = "530a65563483d86bd3b77d98c054ed0b44c47047";
+            sha256 = "sha256-8sn0KXB0KnPlc33FXAPxJIQwi0T7XNAohsuq/aIjPyk=";
           };
 
-          npmDepsHash = "sha256-efXXOVihiiiDYJamIU0EiX2I+RgOAkjKK8DF3KQtw3k=";
+          npmDepsHash = "sha256-1JZHdKN4IdEd92A/tBkD0nWWPjVFzOblQYCDwEAYx2s=";
         };
         nvmVersion =
           let
