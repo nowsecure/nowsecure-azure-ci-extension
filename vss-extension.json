@@ -3,7 +3,7 @@
     "id": "nowsecure-azure-ci-extension",
     "name": "NowSecure Azure CI Extension",
     "description": "Azure Extension for NowSecure Security Assessment",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "publisher": "Nowsecure-com",
     "public": false,
     "targets": [
