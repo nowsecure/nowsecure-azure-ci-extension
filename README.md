@@ -84,7 +84,7 @@ Add the following to your pipeline YAML after your build step:
 | `polling_duration_minutes` | No | number | `30` (static), `60` (full) | How long (in minutes) to poll for assessment completion before timing out. |
 | `log_level` | No | string | `info` | Log verbosity for the task. Valid values: `info`, `debug`. |
 | `ui_host` | No | string | `https://app.nowsecure.com` | NowSecure platform UI base URL. Only change this if you are on a single-tenant deployment. |
-| `api_host` | No | string | `https://lab-api.nowsecure.com` | NowSecure API base URL. Only change this if you are on a single-tenant deployment. |
+| `api_host` | No | string | `https://api.nowsecure.com` | NowSecure API base URL. Only change this if you are on a single-tenant deployment. |
 
 ## Example Pipelines
 
