@@ -61,7 +61,7 @@
             "name": "api_host",
             "type": "string",
             "required": false,
-            "defaultValue": "https://lab-api.nowsecure.com",
+            "defaultValue": "https://api.nowsecure.com",
             "label": "API Host",
             "helpMarkDown": "Defines the NowSecure base API to use.  This will not change unless you are leveraging a single tenant.",
             "groupName": "advanced"
