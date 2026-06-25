@@ -26,7 +26,7 @@ jobs:
 
             find . -name 'ns_*' -delete
 
-            gh release --repo nowsecure/nowsecureci download --clobber \
+            gh release --repo nowsecure/nowsecure-ci download --clobber \
               --pattern 'ns_darwin-arm64*' \
               --pattern 'ns_linux-amd64*' \
               --pattern 'ns_windows-amd64*'
