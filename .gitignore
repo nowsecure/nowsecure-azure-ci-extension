@@ -144,3 +144,5 @@ vite.config.ts.timestamp-*
 index.js
 # direnv stuff
 .direnv/
+
+.DS_Store
